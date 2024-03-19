@@ -2,7 +2,6 @@
 
 import { FaThumbsDown, FaThumbsUp } from "react-icons/fa";
 import { useState } from "react";
-import { Suspense } from "react";
 const Loader = () => (
 	<div className="w-full flex justify-center h-1/3 items-center space-y-5">
 		<span className="loading loading-spinner loading-lg"></span>
@@ -31,8 +30,10 @@ const page = () => {
 			setisLoader(true);
 			const formData = new FormData();
 			formData.append("audio", dataURItoBlob(audioFile));
+			console.log(formData)
 			const response = await fetch(
 				"https://api-inference.huggingface.co/models/abhishtagatya/wav2vec2-base-960h-itw-deepfake",
+				// "https://api-inference.huggingface.co/models/HyperMoon/wav2vec2-base-960h-finetuned-deepfake",
 				{
 					method: "POST", // *GET, POST, PUT, DELETE, etc.
 					headers: {
@@ -45,7 +46,7 @@ const page = () => {
 			if (response) {
 				setisLoader(false);
 				const result = await response.json();
-				if (result[0].score > result[1].score) {
+				if (result[0].label === "bona-fide") {
 					setResult(true);
 				} else {
 					setResult(false);
