@@ -6,6 +6,7 @@ const page = () => {
       <h1 className="text-center text-6xl p-10 uppercase text-white font-semibold">
         authentiscan
       </h1>
+
       <div className="flex space-x-10 justify-center items-center h-1/2 mt-10">
         <Link
           href="/audio"
