@@ -37,8 +37,6 @@ const page = () => {
     e.preventDefault();
     try {
       setisLoader(true);
-      // const formData = new FormData();
-      // formData.append("image", dataURItoBlob(imageFile));
 
       const response = await fetch(
         process.env.NEXT_PUBLIC_IMAGE_MODEL_API + "",
@@ -46,7 +44,6 @@ const page = () => {
           method: "POST",
           headers: {
             Authorization: process.env.NEXT_PUBLIC_API_TOKEN + "",
-            // "Content-type": "multipart/form-data",
           },
           body: JSON.stringify({ image: imageData }),
         }
