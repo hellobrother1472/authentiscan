@@ -13,22 +13,23 @@ const Loader = () => (
 const page = () => {
   const [showResultDiv, setShowResultDiv] = useState(false);
   const [result, setResult] = useState(false);
-  const [imageFile, setImageFile] = useState<string>("");
+  const [imageFile, setImageFile] = useState<string | null>("");
   const [isLoader, setisLoader] = useState(false);
-  const [imgData, setImgData] = useState("");
+  const [imageData, setImageData] = useState<string | null>(null);
 
   const handleChange = (event: any) => {
     setShowResultDiv(false);
-    const file = event.target.files[0];
-    const reader = new FileReader();
+    setImageFile("");
 
-    reader.onloadend = () => {
-      setImgData(reader.result as string);
-    };
-
+    const file = event.target.files?.[0];
     if (file) {
-      reader.readAsDataURL(file);
       setImageFile(URL.createObjectURL(file));
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64String = reader.result?.toString().split(",")[1];
+        setImageData(base64String || null);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -36,8 +37,8 @@ const page = () => {
     e.preventDefault();
     try {
       setisLoader(true);
-      const formData = new FormData();
-      formData.append("image", imgData);
+      // const formData = new FormData();
+      // formData.append("image", dataURItoBlob(imageFile));
 
       const response = await fetch(
         process.env.NEXT_PUBLIC_IMAGE_MODEL_API + "",
@@ -45,9 +46,9 @@ const page = () => {
           method: "POST",
           headers: {
             Authorization: process.env.NEXT_PUBLIC_API_TOKEN + "",
-            "Content-type": "multipart/form-data",
+            // "Content-type": "multipart/form-data",
           },
-          body: formData,
+          body: JSON.stringify({ image: imageData }),
         }
       );
       if (response) {
